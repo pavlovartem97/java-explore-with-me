@@ -28,11 +28,12 @@ public class StatisticsCustomRepositoryImpl implements StatisticsCustomRepositor
 
         Expression<Long> countExpression = specification.getFilter().getUnique()
                 ? builder.countDistinct(root.get("ip"))
-                : root.get("ip");
+                : builder.count(root.get("ip"));
 
-        query.multiselect(root.get("app"), root.get("uri"), builder.count(countExpression));
+        query.multiselect(root.get("app"), root.get("uri"), countExpression);
 
         query.where(specification.toPredicate(root, query, builder));
+        query.orderBy(builder.desc(countExpression));
         return entityManager.createQuery(query).getResultList();
     }
 }
