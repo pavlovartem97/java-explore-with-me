@@ -10,7 +10,7 @@ services:
       - DB_NAME=stats
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - DB_HOST=db
+      - DB_HOST=stats-db
       - DB_PORT=5432
 
   stats-db:
