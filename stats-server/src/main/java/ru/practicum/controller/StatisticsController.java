@@ -28,7 +28,7 @@ public class StatisticsController {
         statisticsService.hit(dto);
     }
 
-    @GetMapping("stats")
+    @GetMapping("/stats")
     public Collection<StatisticsOutDto> calcStats(@RequestParam LocalDateTime start,
                                                   @RequestParam LocalDateTime end,
                                                   @RequestParam(required = false) Set<String> uris,

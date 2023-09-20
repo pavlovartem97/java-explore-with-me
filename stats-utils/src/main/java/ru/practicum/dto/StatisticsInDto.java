@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
+import ru.practicum.validation.StatisticsInDtoValid;
 
 import java.time.LocalDateTime;
 
-import static ru.practicum.constraints.Constraints.DATE_TIME_FORMAT;
-
 @Value
+@StatisticsInDtoValid
 public class StatisticsInDto {
+
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @JsonFormat(pattern = DATE_TIME_FORMAT)
     LocalDateTime timestamp;
