@@ -24,7 +24,7 @@ import java.util.Set;
 @Service
 public class StatsClientImpl extends BaseClient implements StatsClient {
 
-    private final static String STATS_SERVER_URI = "http://stats-server:9090";
+    private static final String STATS_SERVER_URI = "http://stats-server:9090";
 
     @Autowired
     private ObjectMapper objectMapper;
