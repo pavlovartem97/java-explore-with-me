@@ -12,6 +12,7 @@ import ru.practicum.dto.StatisticsInDto;
 import ru.practicum.dto.StatisticsOutDto;
 import ru.practicum.service.StatisticsService;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class StatisticsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void hit(@RequestBody StatisticsInDto dto) {
+    public void hit(@RequestBody @Valid StatisticsInDto dto) {
         statisticsService.hit(dto);
     }
 

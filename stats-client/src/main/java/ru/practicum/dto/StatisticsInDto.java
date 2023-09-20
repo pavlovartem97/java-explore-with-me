@@ -4,23 +4,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-import ru.practicum.validation.StatisticsInDtoValid;
+import ru.practicum.constraints.Constraints;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Value
-@StatisticsInDtoValid
 public class StatisticsInDto {
 
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    @JsonFormat(pattern = DATE_TIME_FORMAT)
+    @JsonFormat(pattern = Constraints.DATE_TIME_FORMAT)
+    @NotNull(message = "timestamp is null")
     LocalDateTime timestamp;
 
+    @NotNull(message = "ip is null")
     String ip;
 
+    @NotNull(message = "app is null")
     String app;
 
+    @NotNull(message = "uri is null")
     String uri;
 
     @JsonCreator

@@ -33,6 +33,10 @@ public class StatisticsService {
 
     @Transactional(readOnly = true)
     public Collection<StatisticsOutDto> calcStats(LocalDateTime start, LocalDateTime end, Set<String> uris, Boolean unique) {
+        if (start.isAfter(end)) {
+            return List.of();
+        }
+
         StatisticsFilter statisticsFilter = StatisticsFilter.builder()
                 .start(start)
                 .end(end)
