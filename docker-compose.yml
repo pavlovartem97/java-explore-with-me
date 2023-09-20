@@ -3,7 +3,7 @@ services:
   stats-server:
     build: ./stats-server
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - stats-db
     environment:
@@ -31,7 +31,7 @@ services:
     ports:
       - "9090:9090"
     environment:
-      - STATS_SERVER_URL=http://stats-server:8080
+      - STATS_SERVER_URL=http://stats-server:8081
 
 #  ewm-service:
 #    ports:
