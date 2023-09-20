@@ -26,10 +26,12 @@ services:
 
   stats-client:
     build: ./stats-client
+    depends_on:
+      - stats-server
     ports:
       - "9090:9090"
     environment:
-      - STATS_SERVER_URL=http://server:8080
+      - STATS_SERVER_URL=http://stats-server:8080
 
 #  ewm-service:
 #    ports:
