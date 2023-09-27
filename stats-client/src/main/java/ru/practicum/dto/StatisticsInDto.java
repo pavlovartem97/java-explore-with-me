@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
-import ru.practicum.constraints.Constraints;
+import ru.practicum.constraints.Constants;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Value
 public class StatisticsInDto {
 
-    @JsonFormat(pattern = Constraints.DATE_TIME_FORMAT)
+    @JsonFormat(pattern = Constants.DATE_TIME_FORMAT)
     @NotNull(message = "timestamp is null")
     LocalDateTime timestamp;
 

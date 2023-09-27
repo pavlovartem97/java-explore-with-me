@@ -1,5 +1,6 @@
 package ru.practicum.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.StatsClient;
-import ru.practicum.constraints.Constraints;
+import ru.practicum.constraints.Constants;
 import ru.practicum.dto.StatisticsInDto;
 import ru.practicum.dto.StatisticsOutDto;
 
@@ -46,8 +47,8 @@ public class StatsClientImpl extends BaseClient implements StatsClient {
 
     public List<StatisticsOutDto> calcStats(LocalDateTime start, LocalDateTime end, Set<String> uris, Boolean unique) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start", start.format(DateTimeFormatter.ofPattern(Constraints.DATE_TIME_FORMAT)));
-        parameters.put("end", end.format(DateTimeFormatter.ofPattern(Constraints.DATE_TIME_FORMAT)));
+        parameters.put("start", start.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)));
+        parameters.put("end", end.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)));
         parameters.put("uris", uris);
         parameters.put("unique", unique);
 
@@ -56,15 +57,10 @@ public class StatsClientImpl extends BaseClient implements StatsClient {
             throw new RuntimeException("Can't create request to stats-server");
         }
 
-        return unboxTypeRef(response.getBody().toString(), new TypeReference<>() {
-        });
-    }
-
-    private <T> T unboxTypeRef(String string, TypeReference<T> ref) {
         try {
-            return objectMapper.readValue(string, ref);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return objectMapper.readValue(response.getBody().toString(), new TypeReference<>(){});
+        } catch (JsonProcessingException ex) {
+            return null;
         }
     }
 }
