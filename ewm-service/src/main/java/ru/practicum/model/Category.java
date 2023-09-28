@@ -13,17 +13,13 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Setter
-@Table(name = "ewm_user")
-public class User {
+@Table(name = "ewm_category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 254)
-    private String email;
-
-    @Column(nullable = false, length = 250)
+    @Column(nullable = false, unique = true, length = 50)
     private String name;
-
 }

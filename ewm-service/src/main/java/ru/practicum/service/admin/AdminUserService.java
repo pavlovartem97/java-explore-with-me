@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
