@@ -35,9 +35,9 @@ public class ErrorHandler {
         return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class, ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleDatabaseException(final DataIntegrityViolationException e) {
+    public Map<String, String> handleDatabaseException(final Exception e) {
         log.error(e.getMessage(), e);
         return Map.of("error", e.getMessage());
     }
