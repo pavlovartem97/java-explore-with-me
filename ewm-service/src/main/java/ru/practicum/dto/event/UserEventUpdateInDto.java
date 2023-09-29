@@ -1,18 +1,18 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 import ru.practicum.constraints.Constants;
-import ru.practicum.dto.enums.StateAction;
+import ru.practicum.dto.enums.UserStateAction;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Value
-public class EventUpdateInDto {
+public class UserEventUpdateInDto {
     @Size(max = 2000, min = 20)
     String annotation;
 
@@ -31,24 +31,24 @@ public class EventUpdateInDto {
 
     Boolean requestModeration;
 
-    StateAction stateAction;
+    UserStateAction stateAction;
 
     @Size(min = 3, max = 120)
     String title;
 
-    LocationDto location;
+    EventLocationDto location;
 
     @JsonCreator
-    public EventUpdateInDto(@JsonProperty("annotation") String annotation,
-                            @JsonProperty("category") Long category,
-                            @JsonProperty("description") String description,
-                            @JsonProperty("eventDate") LocalDateTime eventDate,
-                            @JsonProperty("paid") Boolean paid,
-                            @JsonProperty("participantLimit") Integer participantLimit,
-                            @JsonProperty("requestModeration") Boolean requestModeration,
-                            @JsonProperty("title") String title,
-                            @JsonProperty("stateAction") StateAction stateAction,
-                            @JsonProperty("location") LocationDto location) {
+    public UserEventUpdateInDto(@JsonProperty("annotation") String annotation,
+                                @JsonProperty("category") Long category,
+                                @JsonProperty("description") String description,
+                                @JsonProperty("eventDate") LocalDateTime eventDate,
+                                @JsonProperty("paid") Boolean paid,
+                                @JsonProperty("participantLimit") Integer participantLimit,
+                                @JsonProperty("requestModeration") Boolean requestModeration,
+                                @JsonProperty("title") String title,
+                                @JsonProperty("stateAction") UserStateAction stateAction,
+                                @JsonProperty("location") EventLocationDto location) {
         this.annotation = annotation;
         this.category = category;
         this.description = description;

@@ -2,8 +2,8 @@ package ru.practicum.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.dto.CategoryInDto;
-import ru.practicum.dto.CategoryOutDto;
+import ru.practicum.dto.category.CategoryInDto;
+import ru.practicum.dto.category.CategoryOutDto;
 import ru.practicum.model.Category;
 
 import java.util.List;

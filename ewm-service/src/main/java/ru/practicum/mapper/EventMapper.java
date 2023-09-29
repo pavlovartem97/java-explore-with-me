@@ -2,10 +2,10 @@ package ru.practicum.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.dto.EventBriefOutDto;
-import ru.practicum.dto.EventInDto;
-import ru.practicum.dto.EventOutDto;
-import ru.practicum.dto.LocationDto;
+import ru.practicum.dto.event.EventBriefOutDto;
+import ru.practicum.dto.event.EventInDto;
+import ru.practicum.dto.event.EventLocationDto;
+import ru.practicum.dto.event.EventOutDto;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.model.User;
@@ -25,7 +25,7 @@ public abstract class EventMapper {
     @Mapping(target = "initiator", source = "event.user")
     public abstract EventOutDto map(Event event);
 
-    public abstract LocationDto mapLocation(Event event);
+    public abstract EventLocationDto mapLocation(Event event);
 
     @Mapping(target = "initiator", source = "event.user")
     public abstract EventBriefOutDto mapBriefDto(Event event);

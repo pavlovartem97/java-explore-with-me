@@ -1,8 +1,10 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Value;
 import ru.practicum.constraints.Constants;
+import ru.practicum.dto.category.CategoryOutDto;
+import ru.practicum.dto.user.UserBriefOutDto;
 
 import java.time.LocalDateTime;
 

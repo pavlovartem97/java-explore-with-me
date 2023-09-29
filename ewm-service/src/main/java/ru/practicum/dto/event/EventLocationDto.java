@@ -1,4 +1,4 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import lombok.Value;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Value
-public class LocationDto {
+public class EventLocationDto {
     @NotNull
     @Min(-90)
     @Max(90)

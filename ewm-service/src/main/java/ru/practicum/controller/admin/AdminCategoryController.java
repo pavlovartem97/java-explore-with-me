@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.dto.CategoryInDto;
-import ru.practicum.dto.CategoryOutDto;
+import ru.practicum.dto.category.CategoryInDto;
+import ru.practicum.dto.category.CategoryOutDto;
 import ru.practicum.service.admin.AdminCategoryService;
 
 import javax.validation.Valid;

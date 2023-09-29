@@ -1,11 +1,13 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 import ru.practicum.constraints.Constants;
+import ru.practicum.dto.category.CategoryOutDto;
 import ru.practicum.dto.enums.State;
+import ru.practicum.dto.user.UserBriefOutDto;
 
 import java.time.LocalDateTime;
 
@@ -41,7 +43,7 @@ public class EventOutDto {
 
     String title;
 
-    LocationDto location;
+    EventLocationDto location;
 
     Long views;
 
@@ -60,7 +62,7 @@ public class EventOutDto {
                        @JsonProperty("requestModeration") Boolean requestModeration,
                        @JsonProperty("state") State state,
                        @JsonProperty("title") String title,
-                       @JsonProperty("location") LocationDto location,
+                       @JsonProperty("location") EventLocationDto location,
                        @JsonProperty("views") Long views) {
         this.annotation = annotation;
         this.category = category;

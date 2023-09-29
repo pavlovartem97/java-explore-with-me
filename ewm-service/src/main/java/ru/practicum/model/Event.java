@@ -1,5 +1,6 @@
 package ru.practicum.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.dto.enums.State;
@@ -65,6 +66,7 @@ public class Event {
     @Column(nullable = false)
     Double lon;
 
+    @Setter(AccessLevel.NONE)
     @Column(nullable = false, updatable = false)
     LocalDateTime createdOn = LocalDateTime.now();
 

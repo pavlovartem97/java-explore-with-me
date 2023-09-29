@@ -1,4 +1,4 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,7 +41,7 @@ public class EventInDto {
     String title;
 
     @NotNull
-    LocationDto location;
+    EventLocationDto location;
 
     @JsonCreator
     public EventInDto(@JsonProperty("annotation") String annotation,
@@ -52,7 +52,7 @@ public class EventInDto {
                       @JsonProperty("participantLimit") Integer participantLimit,
                       @JsonProperty("requestModeration") Boolean requestModeration,
                       @JsonProperty("title") String title,
-                      @JsonProperty("location") LocationDto location) {
+                      @JsonProperty("location") EventLocationDto location) {
         this.annotation = annotation;
         this.category = category;
         this.description = description;

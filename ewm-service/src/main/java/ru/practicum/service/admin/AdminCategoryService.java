@@ -3,8 +3,8 @@ package ru.practicum.service.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.CategoryInDto;
-import ru.practicum.dto.CategoryOutDto;
+import ru.practicum.dto.category.CategoryInDto;
+import ru.practicum.dto.category.CategoryOutDto;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.model.Category;
@@ -32,7 +32,7 @@ public class AdminCategoryService {
         return categoryMapper.map(category);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteCategory(long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category not found"));
