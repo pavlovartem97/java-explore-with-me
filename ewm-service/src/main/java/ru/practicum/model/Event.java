@@ -38,6 +38,10 @@ public class Event {
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "compilation_id")
+    Compilation compilation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
