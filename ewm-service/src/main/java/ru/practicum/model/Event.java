@@ -15,11 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -82,4 +84,7 @@ public class Event {
     State state = State.PENDING;
 
     LocalDateTime publishedOn;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+    Set<Request> requests;
 }

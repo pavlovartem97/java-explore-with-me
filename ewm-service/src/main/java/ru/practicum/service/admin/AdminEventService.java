@@ -1,6 +1,9 @@
 package ru.practicum.service.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.enums.State;
@@ -11,10 +14,19 @@ import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.EventMapperSupport;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
+import ru.practicum.model.User;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.UserRepository;
+import ru.practicum.repository.specification.EventSpecification;
 
+import javax.validation.ValidationException;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +34,7 @@ public class AdminEventService {
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
     private final EventMapperSupport eventMapperSupport;
+    private final UserRepository userRepository;
 
     @Transactional
     public EventOutDto updateEvent(long eventId, AdminEventUpdateInDto dto) {
@@ -77,5 +90,29 @@ public class AdminEventService {
             }
         }
         return eventMapperSupport.mapEventToDto(event);
+    }
+
+    public List<EventOutDto> getEvents(Set<Long> userIds,
+                                       Set<State> states,
+                                       Set<Long> categoryIds,
+                                       LocalDateTime rangeStart,
+                                       LocalDateTime rangeEnd,
+                                       @PositiveOrZero int from,
+                                       @Positive int size) {
+        if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
+            throw new ValidationException("rangeEnd can't be before rangeStart");
+        }
+        Set<User> users = Optional.ofNullable(userIds).map(userRepository::findByIdIn).orElse(null);
+        Set<Category> categories = Optional.ofNullable(categoryIds).map(categoryRepository::findByIdIn).orElse(null);
+        EventSpecification eventSpecification = EventSpecification.builder()
+                .categories(categories)
+                .users(users)
+                .states(states)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .build();
+        PageRequest pageRequest = PageRequest.of(from / size, size, Sort.by("id"));
+        Page<Event> events = eventRepository.findAll(eventSpecification, pageRequest);
+        return eventMapperSupport.mapEventsToDto(events.getContent());
     }
 }

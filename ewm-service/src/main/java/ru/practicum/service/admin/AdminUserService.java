@@ -33,7 +33,7 @@ public class AdminUserService {
     @Transactional(readOnly = true)
     public List<UserOutDto> getUsers(@Nullable List<Long> ids, @PositiveOrZero int from, @Positive int size) {
         if (ids != null && !ids.isEmpty()) {
-            return userMapper.map(userRepository.findByIdIn(ids));
+            return userMapper.map(userRepository.findByIdInOrderById(ids));
         } else {
             Page<User> users = userRepository.findAll(PageRequest.of(from / size, size));
             return userMapper.map(users.getContent());

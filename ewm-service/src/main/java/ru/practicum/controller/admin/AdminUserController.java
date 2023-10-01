@@ -46,4 +46,5 @@ public class AdminUserController {
     public UserOutDto createUser(@RequestBody @Valid UserInDto dto) {
         return adminUserService.createUser(dto);
     }
+
 }
