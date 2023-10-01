@@ -21,12 +21,14 @@ public abstract class EventMapper {
     @Mapping(target = "lon", source = "dto.location.lon")
     public abstract Event map(EventInDto dto, Category category, User user);
 
-    @Mapping(target = "location", expression = "java(mapLocation(event))")
-    @Mapping(target = "initiator", source = "event.user")
-    public abstract EventOutDto map(Event event);
-
     public abstract EventLocationDto mapLocation(Event event);
 
+    @Mapping(target = "confirmedRequests", source = "confirmedRequestCount")
     @Mapping(target = "initiator", source = "event.user")
-    public abstract EventBriefOutDto mapBriefDto(Event event);
+    public abstract EventBriefOutDto mapBriefDto(Event event, Long confirmedRequestCount);
+
+    @Mapping(target = "confirmedRequests", source = "confirmedRequestCount")
+    @Mapping(target = "location", expression = "java(mapLocation(event))")
+    @Mapping(target = "initiator", source = "event.user")
+    public abstract EventOutDto map(Event event, Long confirmedRequestCount);
 }

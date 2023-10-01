@@ -3,6 +3,7 @@ package ru.practicum.service.common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.category.CategoryOutDto;
 import ru.practicum.exception.NotFoundException;
@@ -20,7 +21,7 @@ public class CommonCategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryOutDto> getCategories(int from, int size) {
-        Page<Category> categories = categoryRepository.findAll(PageRequest.of(from / size, size));
+        Page<Category> categories = categoryRepository.findAll(PageRequest.of(from / size, size, Sort.by("id")));
         return categoryMapper.map(categories.getContent());
     }
 

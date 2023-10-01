@@ -8,7 +8,7 @@ import ru.practicum.dto.event.AdminEventUpdateInDto;
 import ru.practicum.dto.event.EventOutDto;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.mapper.EventMapper;
+import ru.practicum.mapper.EventMapperSupport;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.repository.CategoryRepository;
@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AdminEventService {
-    private final EventMapper eventMapper;
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
+    private final EventMapperSupport eventMapperSupport;
 
     @Transactional
     public EventOutDto updateEvent(long eventId, AdminEventUpdateInDto dto) {
@@ -69,12 +69,13 @@ public class AdminEventService {
             switch (dto.getStateAction()) {
                 case PUBLISH_EVENT:
                     event.setState(State.PUBLISHED);
+                    event.setPublishedOn(LocalDateTime.now());
                     break;
                 case REJECT_EVENT:
                     event.setState(State.CANCELED);
                     break;
             }
         }
-        return eventMapper.map(event);
+        return eventMapperSupport.mapEventToDto(event);
     }
 }

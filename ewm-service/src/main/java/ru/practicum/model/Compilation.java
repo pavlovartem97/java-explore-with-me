@@ -1,20 +1,24 @@
 package ru.practicum.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+
+import static lombok.AccessLevel.NONE;
 
 @Entity
 @Getter
@@ -31,8 +35,11 @@ public class Compilation {
     @Column(nullable = false)
     Boolean pinned;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "compilation", orphanRemoval = true)
-    @Setter(AccessLevel.NONE)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Setter(NONE)
+    @JoinTable(name = "ewm_event_compilation",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
     @OrderBy("id")
     private List<Event> events = new ArrayList<>();
 }

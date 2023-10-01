@@ -17,6 +17,7 @@ import ru.practicum.dto.event.UserEventUpdateInDto;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.EventMapper;
+import ru.practicum.mapper.EventMapperSupport;
 import ru.practicum.mapper.RequestMapper;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
@@ -42,6 +43,7 @@ public class UsersEventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
+    private final EventMapperSupport eventMapperSupport;
 
     @Transactional
     public EventOutDto createEvent(long userId, EventInDto eventInDto) {
@@ -52,7 +54,7 @@ public class UsersEventService {
 
         Event event = eventMapper.map(eventInDto, category, user);
         event = eventRepository.save(event);
-        return eventMapper.map(event);
+        return eventMapperSupport.mapEventToDto(event);
     }
 
     @Transactional(readOnly = true)
@@ -60,15 +62,13 @@ public class UsersEventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
         Page<Event> events = eventRepository.findByUser(user, PageRequest.of(from / size, size));
-        return events.stream()
-                .map(eventMapper::mapBriefDto)
-                .collect(Collectors.toUnmodifiableList());
+        return eventMapperSupport.mapEventsToBriefDto(events.getContent());
     }
 
     @Transactional(readOnly = true)
     public EventOutDto getUserEvent(long userId, long eventId) {
         Event event = getUserEventByIdAndUserId(userId, eventId);
-        return eventMapper.map(event);
+        return eventMapperSupport.mapEventToDto(event);
     }
 
     @Transactional
@@ -122,7 +122,7 @@ public class UsersEventService {
                     break;
             }
         }
-        return eventMapper.map(event);
+        return eventMapperSupport.mapEventToDto(event);
     }
 
     @Transactional(readOnly = true)

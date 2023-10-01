@@ -13,10 +13,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -37,9 +40,9 @@ public class Event {
     @JoinColumn(name = "category_id")
     Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "compilation_id")
-    Compilation compilation;
+    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
+    @Setter(AccessLevel.NONE)
+    List<Compilation> compilations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -78,4 +81,5 @@ public class Event {
     @Enumerated(STRING)
     State state = State.PENDING;
 
+    LocalDateTime publishedOn;
 }
