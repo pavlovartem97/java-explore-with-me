@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class StatsClientImpl extends BaseClient implements StatsClient {
 
-    private static final String STATS_SERVER_URI = "http://localhost:9090";
+    private static final String STATS_SERVER_URI = "http://stats-server:9090";
 
     @Autowired
     private ObjectMapper objectMapper;
