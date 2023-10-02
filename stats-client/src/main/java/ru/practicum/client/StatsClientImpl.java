@@ -1,7 +1,5 @@
 package ru.practicum.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,15 +15,17 @@ import ru.practicum.dto.StatisticsOutDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class StatsClientImpl extends BaseClient implements StatsClient {
 
-    private static final String STATS_SERVER_URI = "http://stats-server:9090";
+    private static final String STATS_SERVER_URI = "http://localhost:9090";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -38,7 +38,7 @@ public class StatsClientImpl extends BaseClient implements StatsClient {
     }
 
     public void hit(StatisticsInDto statisticsInDto) {
-        ResponseEntity<Object> post = post("/hit", statisticsInDto);
+        ResponseEntity<Object[]> post = post("/hit", statisticsInDto);
 
         if (post.getStatusCode() != HttpStatus.CREATED) {
             throw new RuntimeException("Can't create request to stats-server");
@@ -49,18 +49,17 @@ public class StatsClientImpl extends BaseClient implements StatsClient {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start", start.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)));
         parameters.put("end", end.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT)));
-        parameters.put("uris", uris);
+        parameters.put("uris", String.join(",", uris));
         parameters.put("unique", unique);
 
-        ResponseEntity<Object> response = get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        ResponseEntity<Object[]> response = get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException("Can't create request to stats-server");
         }
 
-        try {
-            return objectMapper.readValue(response.getBody().toString(), new TypeReference<>(){});
-        } catch (JsonProcessingException ex) {
-            return null;
-        }
+        List<StatisticsOutDto> statisticsOutDtos = Arrays.stream(response.getBody())
+                .map(object -> objectMapper.convertValue(object, StatisticsOutDto.class))
+                .collect(Collectors.toUnmodifiableList());
+        return statisticsOutDtos;
     }
 }

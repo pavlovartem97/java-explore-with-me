@@ -11,6 +11,7 @@ import ru.practicum.dto.enums.SortType;
 import ru.practicum.dto.event.EventOutDto;
 import ru.practicum.service.common.CommonEventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -25,8 +26,8 @@ public class CommonEventController {
     private final CommonEventService commonEventService;
 
     @GetMapping("/{id}")
-    public EventOutDto getEvent(@PathVariable long id) {
-        return commonEventService.getEvent(id);
+    public EventOutDto getEvent(@PathVariable long id, HttpServletRequest request) {
+        return commonEventService.getEvent(id, request);
     }
 
     @GetMapping
@@ -38,7 +39,8 @@ public class CommonEventController {
                                        @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                        @RequestParam(defaultValue = "EVENT_DATE") SortType sortType,
                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                       @RequestParam(defaultValue = "10") @Positive int size) {
-        return commonEventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sortType, from, size);
+                                       @RequestParam(defaultValue = "10") @Positive int size,
+                                       HttpServletRequest request) {
+        return commonEventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sortType, from, size, request);
     }
 }

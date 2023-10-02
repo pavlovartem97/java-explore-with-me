@@ -25,10 +25,10 @@ public abstract class EventMapper {
 
     @Mapping(target = "confirmedRequests", source = "confirmedRequestCount")
     @Mapping(target = "initiator", source = "event.user")
-    public abstract EventBriefOutDto mapBriefDto(Event event, Long confirmedRequestCount);
+    public abstract EventBriefOutDto mapBriefDto(Event event, Long confirmedRequestCount, Long views);
 
     @Mapping(target = "confirmedRequests", source = "confirmedRequestCount")
     @Mapping(target = "location", expression = "java(mapLocation(event))")
     @Mapping(target = "initiator", source = "event.user")
-    public abstract EventOutDto map(Event event, Long confirmedRequestCount);
+    public abstract EventOutDto map(Event event, Long confirmedRequestCount, Long views);
 }
