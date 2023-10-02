@@ -92,6 +92,7 @@ public class AdminEventService {
         return eventMapperSupport.mapEventToDto(event);
     }
 
+    @Transactional(readOnly = true)
     public List<EventOutDto> getEvents(Set<Long> userIds,
                                        Set<State> states,
                                        Set<Long> categoryIds,

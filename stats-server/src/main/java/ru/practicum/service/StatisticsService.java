@@ -12,6 +12,7 @@ import ru.practicum.repository.StatisticsRepository;
 import ru.practicum.repository.StatisticsSpecification;
 import ru.practicum.repository.view.StatisticsView;
 
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +35,7 @@ public class StatisticsService {
     @Transactional(readOnly = true)
     public Collection<StatisticsOutDto> calcStats(LocalDateTime start, LocalDateTime end, Set<String> uris, Boolean unique) {
         if (start.isAfter(end)) {
-            return List.of();
+            throw new ValidationException("Start date is after endDate");
         }
 
         StatisticsFilter statisticsFilter = StatisticsFilter.builder()
