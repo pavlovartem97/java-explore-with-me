@@ -43,12 +43,12 @@ public class CommonEventService {
 
     @Transactional(readOnly = true)
     public EventOutDto getEvent(long eventId, HttpServletRequest request) {
+        hitStatisticsClient(request);
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
         if (event.getState() != State.PUBLISHED) {
             throw new NotFoundException("Event was not published");
         }
-        hitStatisticsClient(request);
         Map<Long, Long> views = getViews(List.of(event));
         return eventMapperSupport.mapEventToDto(event, views.get(eventId));
     }
@@ -64,6 +64,7 @@ public class CommonEventService {
                                        @PositiveOrZero int from,
                                        @Positive int size,
                                        HttpServletRequest request) {
+        hitStatisticsClient(request);
         if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
             throw new ValidationException("rangeEnd can't be before rangeStart");
         }
@@ -97,7 +98,6 @@ public class CommonEventService {
                 break;
             }
         }
-        hitStatisticsClient(request);
         return eventMapperSupport.mapEventsToDto(events, views);
     }
 
