@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -35,55 +37,64 @@ public class Event {
     private Long id;
 
     @Column(nullable = false, length = 2000)
-    String annotation;
+    private String annotation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    Category category;
+    private Category category;
 
     @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
     @Setter(AccessLevel.NONE)
-    List<Compilation> compilations = new ArrayList<>();
+    private List<Compilation> compilations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @NotNull
     @Column(nullable = false, length = 7000)
-    String description;
+    private String description;
 
     @Column(nullable = false)
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
 
     @Column(nullable = false)
-    Boolean paid;
+    private Boolean paid;
 
     @Column(nullable = false)
-    Integer participantLimit;
+    private Integer participantLimit;
 
     @Column(nullable = false)
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
     @Column(nullable = false, length = 120)
-    String title;
+    private String title;
 
     @Column(nullable = false)
-    Double lat;
+    private Double lat;
 
     @Column(nullable = false)
-    Double lon;
+    private Double lon;
 
     @Setter(AccessLevel.NONE)
     @Column(nullable = false, updatable = false)
-    LocalDateTime createdOn = LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
-    State state = State.PENDING;
+    private State state = State.PENDING;
 
-    LocalDateTime publishedOn;
+    private LocalDateTime publishedOn;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
-    Set<Request> requests;
+    private Set<Request> requests;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_moderation_history_id")
+    private EventModerationHistory lastModerationHistory;
+
+    @ManyToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @Setter(AccessLevel.NONE)
+    @OrderBy("id DESC")
+    private List<EventModerationHistory> moderationHistories = new ArrayList<>();
 }

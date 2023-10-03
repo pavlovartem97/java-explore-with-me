@@ -17,8 +17,8 @@ import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
-import ru.practicum.repository.filter.SearchEventFilter;
 import ru.practicum.repository.specification.EventSpecification;
+import ru.practicum.repository.specification.SearchEventFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;

@@ -21,12 +21,14 @@ import ru.practicum.mapper.EventMapperSupport;
 import ru.practicum.mapper.RequestMapper;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
+import ru.practicum.model.EventModerationHistory;
 import ru.practicum.model.Request;
 import ru.practicum.model.User;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.repository.UserRepository;
+import ru.practicum.service.support.HistoryModerationSupport;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
@@ -44,6 +46,7 @@ public class UsersEventService {
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
     private final EventMapperSupport eventMapperSupport;
+    private final HistoryModerationSupport historyModerationSupport;
 
     @Transactional
     public EventOutDto createEvent(long userId, EventInDto eventInDto) {
@@ -68,7 +71,8 @@ public class UsersEventService {
     @Transactional(readOnly = true)
     public EventOutDto getUserEvent(long userId, long eventId) {
         Event event = getUserEventByIdAndUserId(userId, eventId);
-        return eventMapperSupport.mapEventToDto(event);
+        List<String> moderationComments = historyModerationSupport.getModerationComments(event);
+        return eventMapperSupport.mapEventToDto(event, null, moderationComments);
     }
 
     @Transactional
@@ -116,6 +120,7 @@ public class UsersEventService {
             switch (dto.getStateAction()) {
                 case SEND_TO_REVIEW:
                     event.setState(State.PENDING);
+                    updateModerationHistory(event);
                     break;
                 case CANCEL_REVIEW:
                     event.setState(State.CANCELED);
@@ -176,5 +181,13 @@ public class UsersEventService {
             throw new NotFoundException("Event not found for current user");
         }
         return event;
+    }
+
+    private void updateModerationHistory(Event event) {
+        EventModerationHistory eventModerationHistory = event.getLastModerationHistory();
+        if (event.getLastModerationHistory() == null) {
+            return;
+        }
+        eventModerationHistory.setCorrected(Boolean.TRUE);
     }
 }

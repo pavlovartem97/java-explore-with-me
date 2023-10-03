@@ -14,18 +14,22 @@ import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.EventMapperSupport;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
+import ru.practicum.model.EventModerationHistory;
 import ru.practicum.model.User;
 import ru.practicum.repository.CategoryRepository;
+import ru.practicum.repository.EventModerationHistoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.UserRepository;
-import ru.practicum.repository.filter.SearchEventFilter;
 import ru.practicum.repository.specification.EventSpecification;
+import ru.practicum.repository.specification.SearchEventFilter;
+import ru.practicum.service.support.HistoryModerationSupport;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +40,8 @@ public class AdminEventService {
     private final EventRepository eventRepository;
     private final EventMapperSupport eventMapperSupport;
     private final UserRepository userRepository;
+    private final EventModerationHistoryRepository eventModerationHistoryRepository;
+    private final HistoryModerationSupport historyModerationSupport;
 
     @Transactional
     public EventOutDto updateEvent(long eventId, AdminEventUpdateInDto dto) {
@@ -87,10 +93,12 @@ public class AdminEventService {
                     break;
                 case REJECT_EVENT:
                     event.setState(State.CANCELED);
+                    createEventModerationHistory(dto.getComment(), event);
                     break;
             }
         }
-        return eventMapperSupport.mapEventToDto(event);
+        List<String> moderationComments = historyModerationSupport.getModerationComments(event);
+        return eventMapperSupport.mapEventToDto(event, null, moderationComments);
     }
 
     @Transactional(readOnly = true)
@@ -99,6 +107,7 @@ public class AdminEventService {
                                        Set<Long> categoryIds,
                                        LocalDateTime rangeStart,
                                        LocalDateTime rangeEnd,
+                                       Boolean onlyCorrected,
                                        @PositiveOrZero int from,
                                        @Positive int size) {
         if (rangeStart != null && rangeEnd != null && rangeEnd.isBefore(rangeStart)) {
@@ -112,9 +121,19 @@ public class AdminEventService {
                 .states(states)
                 .rangeStart(rangeStart)
                 .rangeEnd(rangeEnd)
+                .onlyCorrected(onlyCorrected)
                 .build();
         PageRequest pageRequest = PageRequest.of(from / size, size, Sort.by("id"));
         Page<Event> events = eventRepository.findAll(new EventSpecification(filter), pageRequest);
-        return eventMapperSupport.mapEventsToDto(events.getContent());
+        Map<Long, List<String>> moderationCommentsMap = historyModerationSupport.getModerationCommentsMap(events.getContent());
+        return eventMapperSupport.mapEventsToDto(events.getContent(), null, moderationCommentsMap);
+    }
+
+    private void createEventModerationHistory(String comment, Event event) {
+        EventModerationHistory eventModerationHistory = new EventModerationHistory();
+        eventModerationHistory.setComment(comment);
+        eventModerationHistory.setEvent(event);
+        eventModerationHistory = eventModerationHistoryRepository.save(eventModerationHistory);
+        event.setLastModerationHistory(eventModerationHistory);
     }
 }

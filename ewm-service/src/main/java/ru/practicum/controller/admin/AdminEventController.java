@@ -40,8 +40,9 @@ public class AdminEventController {
                                        @RequestParam(required = false) Set<Long> categories,
                                        @RequestParam(required = false) LocalDateTime rangeStart,
                                        @RequestParam(required = false) LocalDateTime rangeEnd,
+                                       @RequestParam(defaultValue = "false") Boolean onlyCorrected,
                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                        @RequestParam(defaultValue = "10") @Positive int size) {
-        return adminEventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        return adminEventService.getEvents(users, states, categories, rangeStart, rangeEnd, onlyCorrected, from, size);
     }
 }

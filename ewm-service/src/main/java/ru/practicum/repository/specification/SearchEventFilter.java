@@ -1,4 +1,4 @@
-package ru.practicum.repository.filter;
+package ru.practicum.repository.specification;
 
 import lombok.Builder;
 import lombok.Value;
@@ -20,4 +20,5 @@ public class SearchEventFilter {
     Boolean onlyAvailable;
     Boolean paid;
     String text;
+    Boolean onlyCorrected;
 }

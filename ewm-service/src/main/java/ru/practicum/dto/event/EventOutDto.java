@@ -8,6 +8,7 @@ import ru.practicum.dto.enums.State;
 import ru.practicum.dto.user.UserBriefOutDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Value
 public class EventOutDto {
@@ -44,4 +45,6 @@ public class EventOutDto {
     EventLocationDto location;
 
     Long views;
+
+    List<String> comments;
 }
