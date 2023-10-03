@@ -9,4 +9,5 @@ import ru.practicum.model.User;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
     Page<Event> findByUser(User user, Pageable pageable);
+
 }
