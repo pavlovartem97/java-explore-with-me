@@ -7,6 +7,7 @@ import ru.practicum.dto.enums.RequestStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,8 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-
-import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -40,7 +39,7 @@ public class Request {
     User user;
 
     @Column(nullable = false, length = 10)
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     RequestStatus status;
 
     @Setter(AccessLevel.NONE)

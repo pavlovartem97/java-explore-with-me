@@ -7,6 +7,7 @@ import ru.practicum.dto.enums.State;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -80,7 +79,7 @@ public class Event {
     LocalDateTime createdOn = LocalDateTime.now();
 
     @Column(nullable = false, length = 10)
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     State state = State.PENDING;
 
     LocalDateTime publishedOn;

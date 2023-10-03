@@ -17,6 +17,7 @@ import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.filter.SearchEventFilter;
 import ru.practicum.repository.specification.EventSpecification;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +70,7 @@ public class CommonEventService {
             throw new ValidationException("rangeEnd can't be before rangeStart");
         }
         Set<Category> categories = categoryRepository.findByIdIn(categoryId);
-        EventSpecification eventSpecification = EventSpecification.builder()
+        SearchEventFilter filter = SearchEventFilter.builder()
                 .rangeStart(rangeStart != null ? rangeStart : LocalDateTime.now())
                 .rangeEnd(rangeEnd)
                 .states(Set.of(State.PUBLISHED))
@@ -78,6 +79,8 @@ public class CommonEventService {
                 .text(text)
                 .onlyAvailable(onlyAvailable)
                 .build();
+        EventSpecification eventSpecification = new EventSpecification(filter);
+
         List<Event> events = List.of();
         Map<Long, Long> views = new HashMap<>();
         switch (sortType) {

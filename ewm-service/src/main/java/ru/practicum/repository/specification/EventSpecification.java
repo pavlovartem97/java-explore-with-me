@@ -1,14 +1,11 @@
 package ru.practicum.repository.specification;
 
-import lombok.Builder;
 import lombok.Value;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.dto.enums.RequestStatus;
-import ru.practicum.dto.enums.State;
-import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.model.Request;
-import ru.practicum.model.User;
+import ru.practicum.repository.filter.SearchEventFilter;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,47 +14,38 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-@Builder
 @Value
 public class EventSpecification implements Specification<Event> {
-    Set<User> users;
-    Set<State> states;
-    Set<Category> categories;
-    LocalDateTime rangeStart;
-    LocalDateTime rangeEnd;
-    Boolean onlyAvailable;
-    Boolean paid;
-    String text;
+
+    private final SearchEventFilter filter;
 
     @Override
     public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (users != null) {
-            predicates.add(root.get("user").in(users));
+        if (filter.getUsers() != null) {
+            predicates.add(root.get("user").in(filter.getUsers()));
         }
-        if (states != null) {
-            predicates.add(root.get("state").in(states));
+        if (filter.getStates() != null) {
+            predicates.add(root.get("state").in(filter.getStates()));
         }
-        if (categories != null) {
-            predicates.add(root.get("category").in(categories));
+        if (filter.getCategories() != null) {
+            predicates.add(root.get("category").in(filter.getCategories()));
         }
-        if (rangeStart != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), rangeStart));
+        if (filter.getRangeStart() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), filter.getRangeStart()));
         }
-        if (rangeEnd != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), rangeEnd));
+        if (filter.getRangeEnd() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), filter.getRangeEnd()));
         }
-        if (text != null) {
-            predicates.add(criteriaBuilder.or(createLikePredicate(text, "description", root, criteriaBuilder),
-                    createLikePredicate(text, "annotation", root, criteriaBuilder)));
+        if (filter.getText() != null) {
+            predicates.add(criteriaBuilder.or(createLikePredicate(filter.getText(), "description", root, criteriaBuilder),
+                    createLikePredicate(filter.getText(), "annotation", root, criteriaBuilder)));
         }
-        if (onlyAvailable == Boolean.TRUE) {
+        if (filter.getOnlyAvailable() == Boolean.TRUE) {
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<Event> eventRoot = subquery.from(Event.class);
             Join<Event, Request> eventRequestRoot = eventRoot.join("requests", JoinType.LEFT);
@@ -70,8 +58,8 @@ public class EventSpecification implements Specification<Event> {
             Predicate requestLessThanLimit = root.get("id").in(subquery);
             predicates.add(criteriaBuilder.or(requestLessThanLimit, requestLimitIsZero));
         }
-        if (paid != null) {
-            predicates.add(criteriaBuilder.equal(root.get("paid"), paid));
+        if (filter.getPaid() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("paid"), filter.getPaid()));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

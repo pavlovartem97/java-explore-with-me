@@ -14,6 +14,7 @@ import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 @Service
@@ -48,6 +49,10 @@ public class AdminCompilationService {
 
     @Transactional
     public CompilationOutDto updateCompilation(@Valid CompilationUpdateInDto dto, long compId) {
+        if (dto.getTitle() != null && dto.getTitle().isBlank()) {
+            throw new ValidationException("Title is blank");
+        }
+
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation not found"));
 

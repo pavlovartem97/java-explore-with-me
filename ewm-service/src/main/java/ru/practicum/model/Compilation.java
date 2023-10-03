@@ -1,5 +1,6 @@
 package ru.practicum.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,6 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import static lombok.AccessLevel.NONE;
-
 @Entity
 @Getter
 @Setter
@@ -35,7 +34,7 @@ public class Compilation {
     Boolean pinned;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @Setter(NONE)
+    @Setter(AccessLevel.NONE)
     @JoinTable(name = "ewm_event_compilation",
             joinColumns = @JoinColumn(name = "compilation_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))

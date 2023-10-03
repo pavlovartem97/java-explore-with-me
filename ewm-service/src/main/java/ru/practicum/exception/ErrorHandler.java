@@ -22,7 +22,9 @@ public class ErrorHandler {
         return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, MissingRequestValueException.class, ValidationException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,
+            MissingRequestValueException.class,
+            ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationException(final Exception e) {
         log.error(e.getMessage(), e);

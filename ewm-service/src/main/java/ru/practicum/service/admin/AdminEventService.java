@@ -18,6 +18,7 @@ import ru.practicum.model.User;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.UserRepository;
+import ru.practicum.repository.filter.SearchEventFilter;
 import ru.practicum.repository.specification.EventSpecification;
 
 import javax.validation.ValidationException;
@@ -105,7 +106,7 @@ public class AdminEventService {
         }
         Set<User> users = Optional.ofNullable(userIds).map(userRepository::findByIdIn).orElse(null);
         Set<Category> categories = Optional.ofNullable(categoryIds).map(categoryRepository::findByIdIn).orElse(null);
-        EventSpecification eventSpecification = EventSpecification.builder()
+        SearchEventFilter filter = SearchEventFilter.builder()
                 .categories(categories)
                 .users(users)
                 .states(states)
@@ -113,7 +114,7 @@ public class AdminEventService {
                 .rangeEnd(rangeEnd)
                 .build();
         PageRequest pageRequest = PageRequest.of(from / size, size, Sort.by("id"));
-        Page<Event> events = eventRepository.findAll(eventSpecification, pageRequest);
+        Page<Event> events = eventRepository.findAll(new EventSpecification(filter), pageRequest);
         return eventMapperSupport.mapEventsToDto(events.getContent());
     }
 }
