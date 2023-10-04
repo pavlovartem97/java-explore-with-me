@@ -31,7 +31,7 @@ public class Compilation {
     private String title;
 
     @Column(nullable = false)
-    Boolean pinned;
+    private Boolean pinned;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @Setter(AccessLevel.NONE)

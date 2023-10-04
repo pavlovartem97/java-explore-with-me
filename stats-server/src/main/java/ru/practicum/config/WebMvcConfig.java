@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addConverter(new LocalDateTimeConverter());
     }
 
-    public static class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
+    private static class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
         @Override
         public LocalDateTime convert(@SuppressWarnings("NullableProblems") String value) {
             try {

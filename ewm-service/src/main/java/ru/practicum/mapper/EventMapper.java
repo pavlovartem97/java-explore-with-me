@@ -10,6 +10,8 @@ import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.model.User;
 
+import java.util.List;
+
 @Mapper(uses = {
         CategoryMapper.class,
         UserMapper.class
@@ -30,5 +32,5 @@ public abstract class EventMapper {
     @Mapping(target = "confirmedRequests", source = "confirmedRequestCount")
     @Mapping(target = "location", expression = "java(mapLocation(event))")
     @Mapping(target = "initiator", source = "event.user")
-    public abstract EventOutDto map(Event event, Long confirmedRequestCount, Long views);
+    public abstract EventOutDto map(Event event, Long confirmedRequestCount, Long views, List<String> comments);
 }

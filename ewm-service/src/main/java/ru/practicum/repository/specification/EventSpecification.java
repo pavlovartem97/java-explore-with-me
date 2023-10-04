@@ -4,8 +4,8 @@ import lombok.Value;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.dto.enums.RequestStatus;
 import ru.practicum.model.Event;
+import ru.practicum.model.EventModerationHistory;
 import ru.practicum.model.Request;
-import ru.practicum.repository.filter.SearchEventFilter;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -60,6 +60,10 @@ public class EventSpecification implements Specification<Event> {
         }
         if (filter.getPaid() != null) {
             predicates.add(criteriaBuilder.equal(root.get("paid"), filter.getPaid()));
+        }
+        if (filter.getOnlyCorrected() == Boolean.TRUE) {
+            Join<Event, EventModerationHistory> lastModerationHistory = root.join("lastModerationHistory");
+            predicates.add(criteriaBuilder.equal(lastModerationHistory.get("corrected"), Boolean.TRUE));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

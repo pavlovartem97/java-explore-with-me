@@ -38,6 +38,9 @@ public class AdminEventUpdateInDto {
 
     EventLocationDto location;
 
+    @Size(min = 5, max = 500)
+    String comment;
+
     @JsonCreator
     public AdminEventUpdateInDto(@JsonProperty("annotation") String annotation,
                                  @JsonProperty("category") Long category,
@@ -48,7 +51,8 @@ public class AdminEventUpdateInDto {
                                  @JsonProperty("requestModeration") Boolean requestModeration,
                                  @JsonProperty("title") String title,
                                  @JsonProperty("stateAction") AdminStateAction stateAction,
-                                 @JsonProperty("location") EventLocationDto location) {
+                                 @JsonProperty("location") EventLocationDto location,
+                                 @JsonProperty("comment") String comment) {
         this.annotation = annotation;
         this.category = category;
         this.description = description;
@@ -59,5 +63,6 @@ public class AdminEventUpdateInDto {
         this.title = title;
         this.stateAction = stateAction;
         this.location = location;
+        this.comment = comment;
     }
 }
