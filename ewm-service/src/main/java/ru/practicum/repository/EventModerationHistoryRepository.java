@@ -7,5 +7,7 @@ import ru.practicum.model.EventModerationHistory;
 import java.util.List;
 
 public interface EventModerationHistoryRepository extends JpaRepository<EventModerationHistory, Long> {
-    List<EventModerationHistory> findByEventInAndCommentIsNotNull(List<Event> events);
+    List<EventModerationHistory> findByEventInAndCommentIsNotNullOrderByIdDesc(List<Event> events);
+
+    List<EventModerationHistory> findByEvent(Event event);
 }

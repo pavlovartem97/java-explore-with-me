@@ -90,6 +90,7 @@ public class AdminEventService {
                 case PUBLISH_EVENT:
                     event.setState(State.PUBLISHED);
                     event.setPublishedOn(LocalDateTime.now());
+                    removeModerationHistory(event);
                     break;
                 case REJECT_EVENT:
                     event.setState(State.CANCELED);
@@ -135,5 +136,12 @@ public class AdminEventService {
         eventModerationHistory.setEvent(event);
         eventModerationHistory = eventModerationHistoryRepository.save(eventModerationHistory);
         event.setLastModerationHistory(eventModerationHistory);
+    }
+
+    private void removeModerationHistory(Event event) {
+        event.setLastModerationHistory(null);
+        List<EventModerationHistory> moderationHistories = eventModerationHistoryRepository.findByEvent(event);
+        eventModerationHistoryRepository.deleteAll(moderationHistories);
+        eventModerationHistoryRepository.flush();
     }
 }
